@@ -1,0 +1,32 @@
+---
+region:
+  _default: us-east-1
+  stage: eu-central-1
+  prod: ap-southeast-1
+
+severity_level:
+  _default: 4
+  production: 3
+
+replicas:
+  _default: 1
+
+resources:
+  requests:
+    cpu:
+      _default: 1m
+    memory:
+      _default: 256Mi
+  limits:
+    memory:
+      _default: 256Mi
+
+aws_access_key_id:
+  _default: DEFAULTDEFAULTDEFAULT
+  stage: STAGESTAGESTAGESTAGE
+  prod: PRODPRODPRODPRODPROD
+
+aws_secret_access_key:
+  _default: eideikuoBaeg1ohNeeyiezeej1Boeyo4
+  stage: aih4Eizae0pieVaugohshaelae7cieKe
+  prod: feinahchaemucheuS5fae7shie4xaeYa

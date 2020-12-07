@@ -1,0 +1,42 @@
+---
+variables:
+  WERF_VERSION: "1.2 beta"
+
+stages:
+  - deploy
+
+.base_deploy:
+  stage: deploy
+  script:
+    - type multiwerf && source <(multiwerf use ${WERF_VERSION_GLOBAL:-$WERF_VERSION})
+    - type werf && source <(werf ci-env gitlab --tagging-strategy tag-or-branch --verbose)
+    - set -x
+    - werf deploy --stages-storage :local
+      --namespace "${CI_PROJECT_NAME}"
+      --set "cluster=${CLUSTER:-stage}"
+  except:
+    - schedules
+  tags:
+    - werf
+
+Deploy Prod:
+  extends: .base_deploy
+  variables:
+    WERF_KUBE_CONTEXT: "prod"
+    CLUSTER: "prod"
+  environment:
+    name: prod
+  when: manual
+  tags:
+    - werf
+
+Deploy Stage:
+  extends: .base_deploy
+  variables:
+    WERF_KUBE_CONTEXT: "stage"
+    CLUSTER: "stage"
+  environment:
+    name: stage
+  when: manual
+  tags:
+    - werf
