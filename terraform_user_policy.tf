@@ -3,8 +3,8 @@ resource "aws_iam_user" "cloudwatch_exporter" {
   path = "/system/"
 }
 
-resource "aws_iam_access_key" "lb" {
-  user = aws_iam_user.lb.name
+resource "aws_iam_access_key" "cloudwatch_exporter" {
+  user = aws_iam_user.cloudwatch_exporter.name
 }
 
 resource "aws_iam_user_policy" "cloudwatch_policy" {
@@ -27,4 +27,9 @@ resource "aws_iam_user_policy" "cloudwatch_policy" {
   ]
 }
 EOF
+}
+
+resource "aws_iam_user_policy_attachment" "cloudwatch_exporter" {
+  user       = aws_iam_user.cloudwatch_exporter.name
+  policy_arn = aws_iam_policy.cloudwatch_policy.arn
 }
