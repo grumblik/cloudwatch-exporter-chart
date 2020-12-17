@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ printf "%s-config" .Chart.Name | quote }}
+  name: config
 data:
   config.yml: |
-    region: {{ pluck .Values.cluster .Values.region | first | default .Values.region._default }}
+    region: us-east-1
     delay_seconds: 60
     metrics:
     - aws_namespace: AWS/NetworkELB

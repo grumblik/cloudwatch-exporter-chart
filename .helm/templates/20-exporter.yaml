@@ -2,37 +2,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name | quote }}
+  name: cloudwatch-exporter
 spec:
-  replicas: {{ pluck .Values.global.env .Values.replicas | first | default .Values.replicas._default }}
+  replicas: 1
   selector:
     matchLabels:
-      app: {{ .Chart.Name | quote }}
+      app: cloudwatch-exporter
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name | quote }}
+        app: cloudwatch-exporter
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/01-config.yaml") . | sha256sum }}
     spec:
       imagePullSecrets:
       containers:
-      - name: {{ .Chart.Name | quote }}
+      - name: cloudwatch-exporter
         image: prom/cloudwatch-exporter:cloudwatch_exporter-0.9.0
         ports:
         - name: http-metrics
           containerPort: 9106
         env:
         - name: AWS_ACCESS_KEY_ID
-          value: "{{ pluck .Values.cluster .Values.aws_access_key_id | first | default .Values.aws_access_key_id._default }}"
+          value: "{{ .Values.aws_access_key_id }}"
         - name: AWS_SECRET_ACCESS_KEY
-          value: "{{ pluck .Values.cluster .Values.aws_secret_access_key | first | default .Values.aws_secret_access_key._default }}"
+          value: "{{ .Values.aws_secret_access_key }}"
         resources:
           requests:
-            cpu: {{ pluck .Values.global.env .Values.resources.requests.cpu | first | default .Values.resources.requests.cpu._default }}
-            memory: {{ pluck .Values.global.env .Values.resources.requests.memory | first | default .Values.resources.requests.memory._default }}
+            cpu: 1m
+            memory: 256Mi
           limits:
-            memory: {{ pluck .Values.global.env .Values.resources.requests.memory | first | default .Values.resources.requests.memory._default }}
+            memory: 256Mi
         readinessProbe:
           httpGet:
             path: /-/ready
@@ -54,15 +54,15 @@ spec:
       volumes:
       - name: config
         configMap:
-          name: {{ printf "%s-config" .Chart.Name | quote }}
+          name: config
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Chart.Name | quote }}
+  name: cloudwatch-exporter
 spec:
   selector:
-    app: {{ .Chart.Name | quote }}
+    app: cloudwatch-exporter
   ports:
   - name: http-metrics
     port: 9106
