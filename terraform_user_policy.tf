@@ -1,3 +1,8 @@
+provider "aws" {
+  profile = "default"
+  region  = "us-east-1"
+}
+
 resource "aws_iam_user" "cloudwatch_exporter" {
   name = "cloudwatch_exporter"
   path = "/system/"
@@ -7,10 +12,9 @@ resource "aws_iam_access_key" "cloudwatch_exporter" {
   user = aws_iam_user.cloudwatch_exporter.name
 }
 
-resource "aws_iam_user_policy" "cloudwatch_policy" {
+resource "aws_iam_policy" "cloudwatch_policy" {
   name = "cloudwatch_policy"
-  user = aws_iam_user.cloudwatch_exporter.name
-
+  path = "/"
   policy = <<EOF
 {
   "Version": "2012-10-17",
