@@ -25,9 +25,9 @@ spec:
           containerPort: 5000
         env:
         - name: AWS_ACCESS_KEY_ID
-          value: "{{ pluck .Values.cluster .Values.aws_access_key_id | first | default .Values.aws_access_key_id._default }}"
+          value: "{{ .Values.aws_access_key_id }}"
         - name: AWS_SECRET_ACCESS_KEY
-          value: "{{ pluck .Values.cluster .Values.aws_secret_access_key | first | default .Values.aws_secret_access_key._default }}"
+          value: "{{ .Values.aws_secret_access_key }}"
         - name: METRIC_TODAY_DAILY_COSTS
           value: "{{ .Values.env.metric_today_daily_costs }}"
         - name: METRIC_YESTERDAY_DAILY_COSTS
